@@ -10,21 +10,6 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-    func brandPalette(_ color: BrandColor) -> UIColor {
-        switch color {
-        case .blue:
-            return UIColor(red: 203.0/255.0, green: 97.0/255.0, blue: 76.0/255.0, alpha: 1.0)
-        case .lightBlue:
-            return UIColor(red: 132.0/255.0, green: 188.0/255.0, blue: 218.0/255.0, alpha: 1.0)
-        case .yellow:
-            return UIColor(red: 236.0/255.0, green: 195.0/255.0, blue: 11.0/255.0, alpha: 1.0)
-        case .orange:
-            return UIColor(red: 243.0/255.0, green: 119.0/255.0, blue: 72.0/255.0, alpha: 1.0)
-        case .pink:
-            return UIColor(red: 213.0/255.0, green: 96.0/255.0, blue: 98.0/255.0, alpha: 1.0)
-        }
-    }
     
     var window: UIWindow?
 
@@ -32,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         // Navigation bar styling
-        UINavigationBar.appearance().barTintColor = brandPalette(.yellow)
+        UINavigationBar.appearance().barTintColor = UIColor.MyTheme.yellow
         UINavigationBar.appearance().tintColor = UIColor.darkGray
         //UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.darkGray]
         UIApplication.shared.statusBarStyle = .lightContent

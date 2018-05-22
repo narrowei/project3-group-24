@@ -1,36 +1,57 @@
 //
-//  AddRecipeController.swift
+//  RecipeController.swift
 //  Reciper Keeper
 //
-//  Created by Roman Pavlov on 18/5/18.
+//  Created by Alice Mai Tu on 10/5/18.
 //  Copyright © 2018 Alice Mai Tu. All rights reserved.
 //
 
 import UIKit
 import RealmSwift
-class AddRecipeController: UITableViewController,UITextFieldDelegate,UIPickerViewDataSource,UIPickerViewDelegate {
 
-    let recipiesArray:[[String:Any]] = [
-        ["name":"pasta","time":25,"cuisine":"italian","instructions":[[""]]]
+class AddRecipeController: UITableViewController, UITextFieldDelegate {
+    var currentRecipe: Recipe?
+    var items = [AddViewModelItem]()
     
-    ]
-    var name:String = ""
-    var cuisine:String = "Australian"
-    var time = 0
+    var name: String?
+    var cuisine: String?
+    var time: Int?
     var ingredients = [String]()
     var instructions = [String]()
     
+    @objc func tapDetected(){
+        view.endEditing(true)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        //remove keyboard when outside the area outside the text field is tapped
+        
+        // Tap out gesture
         let tap = UITapGestureRecognizer(target: self, action: #selector(AddRecipeController.tapDetected))
         view.addGestureRecognizer(tap)
         
+        // Generate view model
+        let addViewModel = AddViewModel()
+        items = addViewModel.items
         
+        // Specify title and row height
+        // self.navigationItem.title = currentRecipe.name
         
+        tableView.rowHeight = UITableViewAutomaticDimension
+        tableView.sectionHeaderHeight = 40
+        tableView?.register(AddNameCell.nib, forCellReuseIdentifier: AddNameCell.identifier)
+        tableView?.register(SelectCuisineCell.nib, forCellReuseIdentifier: SelectCuisineCell.identifier)
+        tableView?.register(EstimateTimeCell.nib, forCellReuseIdentifier: EstimateTimeCell.identifier)
+        tableView?.register(AddIngredientCell.nib, forCellReuseIdentifier: AddIngredientCell.identifier)
+        tableView?.register(AddInstructionCell.nib, forCellReuseIdentifier: AddInstructionCell.identifier)
+        
+        // Uncomment the following line to preserve selection between presentations
+        // self.clearsSelectionOnViewWillAppear = false
+        
+        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -41,202 +62,175 @@ class AddRecipeController: UITableViewController,UITextFieldDelegate,UIPickerVie
         tableView.reloadData()
     }
     
-
     // MARK: - Table view data source
-
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 2
+        return items.count
     }
     
-    let numberOfRowsAtSection: [Int] = [1, 1, 1]
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0{
-            return ingredients.count
-        }else{
-            return instructions.count
-        }
-    }
-    // returning headers of instructions and ingridients
-    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        if section == 0{
-            //getting header
-            let headerView = Bundle.main.loadNibNamed("AddRecipeIngredientHeaderView", owner: self, options: nil)?.first as? UIView
-            //getting button
-            let button = headerView?.viewWithTag(1) as! UIButton
-            //deleting old target
-            button.removeTarget(nil, action: nil, for: .allEvents)
-            //adding ingridient
-            button.addTarget(self, action: #selector(AddRecipeController.addIngredientAction), for: .touchUpInside)
-            //getting recepi name
-            let nameTextField = headerView?.viewWithTag(2) as! UITextField
-            nameTextField.delegate = self
-            nameTextField.text = name
-            //getting selected cuisine
-            let pickerView = headerView?.viewWithTag(3) as! UIPickerView
-            pickerView.delegate = self
-            pickerView.dataSource = self
-            switch Cuisine(rawValue: cuisine)!{
-            case .Australian:
-                pickerView.selectRow(0, inComponent: 0, animated: false)
-            case .Chinese:
-                pickerView.selectRow(1, inComponent: 0, animated: false)
-            case .Italian:
-                pickerView.selectRow(2, inComponent: 0, animated: false)
-            case .Russian:
-                pickerView.selectRow(3, inComponent: 0, animated: false)
-            case .Thai:
-                pickerView.selectRow(4, inComponent: 0, animated: false)
-            case .Vietnamese:
-                pickerView.selectRow(5, inComponent: 0, animated: false)
-            }
-            //getting time for cooking
-            let timeTextField = headerView?.viewWithTag(4) as! UITextField
-            timeTextField.delegate = self
-            timeTextField.text = "\(time)"
-            
-            return headerView
-        }else{
-            let headerView = Bundle.main.loadNibNamed("AddRecipeInstructionHeaderView", owner: self, options: nil)?.first as? UIView
-            let button = headerView?.viewWithTag(1) as! UIButton
-            button.removeTarget(nil, action: nil, for: .allEvents)
-            button.addTarget(self, action: #selector(AddRecipeController.addInstructionAction), for: .touchUpInside)
-            return headerView
+        if items[section].type == .ingredients {
+            print(ingredients.count)
+            return (ingredients.count + 1)
+        } else if items[section].type == .instruction {
+            return (instructions.count + 1)
+        } else {
+            return items[section].rowCount
         }
     }
     
-    //setting header height
-    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        if section == 0{
-            return 535
-        }else{
-            return 56
-        }
-        
-    }
-    //setting footer height
-    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 0.02
-    }
     
-    // showing ingridients and instrcutions in the respective cells
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var text = ""
-        if indexPath.section == 0{
-            text = ingredients[indexPath.row]
-        }else{
-            text = instructions[indexPath.row]
+        let cell = UITableViewCell()
+        
+        // Generate view for each section
+        let item = items[indexPath.section]
+        switch item.type {
+            
+        // Generate view for Ingredient section
+        case .name:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: AddNameCell.identifier, for: indexPath) as? AddNameCell {
+                cell.name = name
+                let recipeName = cell.viewWithTag(1) as! UITextField
+                recipeName.delegate = self
+                return cell
+            }
+            
+        // Generate view for Instruction section
+        case .cuisine:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: SelectCuisineCell.identifier, for: indexPath) as? SelectCuisineCell {
+                cell.cuisine = cuisine
+                let cuisineType = cell.viewWithTag(2) as! UITextField
+                cuisineType.delegate = self
+                return cell
+            }
+            
+        case .time:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: EstimateTimeCell.identifier, for: indexPath) as? EstimateTimeCell {
+                cell.time = time
+                let estimatedTime = cell.viewWithTag(3) as! UITextField
+                estimatedTime.delegate = self
+                return cell
+            }
+            
+        case .ingredients:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: AddIngredientCell.identifier, for: indexPath) as? AddIngredientCell {
+                let buttonAddIngredient = cell.viewWithTag(4) as! UIButton
+                buttonAddIngredient.removeTarget(nil, action: nil, for: .allEvents)
+                buttonAddIngredient.addTarget(self, action: #selector(AddRecipeController.addIngredientAction), for: .touchUpInside)
+                let ingredient = cell.viewWithTag(5) as! UILabel
+                if indexPath.row < ingredients.count {
+                    ingredient.text = ingredients[indexPath.row]
+                }
+                //print("index path row is\(indexPath.row), count array is \(ingredients.count)")
+                return cell
+            }
+            
+        case .instruction:
+            if let cell = tableView.dequeueReusableCell(withIdentifier: AddInstructionCell.identifier, for: indexPath) as? AddInstructionCell {
+                let buttonAddInstruction = cell.viewWithTag(6) as! UIButton
+                buttonAddInstruction.removeTarget(nil, action: nil, for: .allEvents)
+                buttonAddInstruction.addTarget(self, action: #selector(AddRecipeController.addInstructionAction), for: .touchUpInside)
+                let instruction = cell.viewWithTag(7) as! UILabel
+                if indexPath.row < instructions.count {
+                    instruction.text = instructions[indexPath.row]
+                }
+                return cell
+            }
         }
         
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "RecipeTextCell", for: indexPath)
-        let label = cell.viewWithTag(1) as! UILabel
-        label.text = text
-
         return cell
     }
     
-    //deselecting cells
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return items[section].sectionTitle
     }
-    
-    
-    
-    
-    // MARK: - UITextFieldDelegate
     
     func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField.tag == 2{ 
+        if textField.tag == 1 {
             name = textField.text ?? ""
-        }else if textField.tag == 4{
-            time = Int(textField.text ?? "0")!
+        } else if textField.tag == 2 {
+            cuisine = textField.text ?? ""
+        } else if textField.tag == 3 {
+            if let timeString = textField.text {
+                let array = timeString.split(separator: " ")
+                if array[1] == "minutes" {
+                    time = Int(array[0])
+                } else {
+                    time = Int(array[0])! * 60
+                }
+            } else {
+                time = 0
+            }
         }
     }
     
-    // MARK: - UIPickerViewDataSource
+    /*
+     // Override to support conditional editing of the table view.
+     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+     // Return false if you do not want the specified item to be editable.
+     return true
+     }
+     */
     
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
+    /*
+     // Override to support editing the table view.
+     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+     if editingStyle == .delete {
+     // Delete the row from the data source
+     tableView.deleteRows(at: [indexPath], with: .fade)
+     } else if editingStyle == .insert {
+     // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+     }
+     }
+     */
+    
+    /*
+     // Override to support rearranging the table view.
+     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+     
+     }
+     */
+    
+    /*
+     // Override to support conditional rearranging of the table view.
+     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+     // Return false if you do not want the item to be re-orderable.
+     return true
+     }
+     */
+    
+    
+    // MARK: - Navigation
+    
+    // In a storyboard-based application, you will often want to do a little preparation before navigation
+    /*override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // Get the new view controller using segue.destinationViewController.
+        // Pass the selected object to the new view controller.
+     
     }
-    
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return 5
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        switch row {
-        case 0:
-            return Cuisine.Australian.rawValue
-        case 1:
-            return Cuisine.Chinese.rawValue
-        case 2:
-            return Cuisine.Italian.rawValue
-        case 3:
-            return Cuisine.Russian.rawValue
-        case 4:
-            return Cuisine.Thai.rawValue
-        case 5:
-            return Cuisine.Vietnamese.rawValue
-        
-        default:
-            return ""
-        }
-    }
-    
-    // MARK: - UIPickerViewDelegate
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        switch row {
-        case 0:
-            cuisine = Cuisine.Australian.rawValue
-        case 1:
-            cuisine = Cuisine.Chinese.rawValue
-        case 2:
-            cuisine = Cuisine.Italian.rawValue
-        case 3:
-            cuisine = Cuisine.Russian.rawValue
-        case 4:
-            cuisine = Cuisine.Thai.rawValue
-        case 5:
-            cuisine = Cuisine.Vietnamese.rawValue
-            
-        default:
-            cuisine = ""
-        }
-    }
-    
-    // MARK: - User actions
-    
-    //действие при нажатии конпки добавить ингридиент
+ */
     @objc func addIngredientAction(){
-        print("addIngredientAction")
-        
         let textEditor = storyboard?.instantiateViewController(withIdentifier: "TextEditorController") as! TextEditorController
         textEditor.mode = .ingredient
         navigationController?.pushViewController(textEditor, animated: true)
         
     }
     //actions when add instruction button is tapped
-
+    
     @objc func addInstructionAction(){
-        print("addInstructionAction")
         let textEditor = storyboard?.instantiateViewController(withIdentifier: "TextEditorController") as! TextEditorController
         textEditor.mode = .instruction
         navigationController?.pushViewController(textEditor, animated: true)
     }
-   
-    //saving recepi to DB
+    
+    
     @IBAction func saveAction(_ sender: Any) {
         let realm = try! Realm()
         
-        
-        let realmInstructions = List<Instruction>()
+        let realmInstructions = List<Step>()
         var i = 1
         for instruction in instructions{
-            let realmInstruction = Instruction(text:instruction, step:i, time:25)
+            let realmInstruction = Step(description: instruction, needTimer: false, timer:0)
             realmInstructions.append(realmInstruction)
             i += 1
         }
@@ -245,17 +239,13 @@ class AddRecipeController: UITableViewController,UITextFieldDelegate,UIPickerVie
         for ingredient in ingredients{
             realmIngredients.append(ingredient)
         }
-
-        let recipe = Recipe(name: name, time: time, cuisine: cuisine, ingredients: realmIngredients, instructions: realmInstructions)
+        
+        let recipe = Recipe(name: name!, time: time!, cuisine: cuisine!, ingredients: realmIngredients, instruction: realmInstructions)
         try! realm.write {
             realm.add(recipe, update: true)
             self.navigationController?.popViewController(animated: true)
         }
     }
     
-    
-    @objc func tapDetected(){
-        view.endEditing(true)
-    }
     
 }
