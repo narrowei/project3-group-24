@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="IngredientCell" id="Uyr-We-9yl" userLabel="IngredientCell" customClass="IngredientCell" customModule="Reciper_Keeper" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Uyr-We-9yl" id="eCs-bQ-10A">
+                <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="5T5-09-aUP">
+                        <rect key="frame" x="0.0" y="0.0" width="355" height="43.5"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fOi-Y4-PFV" userLabel="Color tag">
+                                <rect key="frame" x="0.0" y="0.0" width="20" height="43.5"/>
+                                <color key="backgroundColor" red="1" green="0.85148361689999996" blue="0.30495553479999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="faf-04-ol3"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8EY-Op-jvl" userLabel="Content area">
+                                <rect key="frame" x="36.5" y="0.0" width="272.5" height="43.5"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Ingredient" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="10" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i6z-PE-cII">
+                                        <rect key="frame" x="10" y="10" width="242.5" height="23.5"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="i6z-PE-cII" firstAttribute="leading" secondItem="8EY-Op-jvl" secondAttribute="leading" constant="10" id="4J5-BY-Cgt"/>
+                                    <constraint firstAttribute="trailing" secondItem="i6z-PE-cII" secondAttribute="trailing" constant="20" id="4gU-EW-1ly"/>
+                                    <constraint firstAttribute="bottom" secondItem="i6z-PE-cII" secondAttribute="bottom" constant="10" id="8Pq-VK-S2L"/>
+                                    <constraint firstItem="i6z-PE-cII" firstAttribute="top" secondItem="8EY-Op-jvl" secondAttribute="top" constant="10" id="zzZ-ec-LGa"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UG9-8f-Rck" userLabel="Action area">
+                                <rect key="frame" x="325.5" y="0.0" width="29.5" height="43.5"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9wH-dH-dhb">
+                                        <rect key="frame" x="0.0" y="7.5" width="29.5" height="29"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" secondItem="9wH-dH-dhb" secondAttribute="width" multiplier="1:1" id="glW-5N-QhP"/>
+                                        </constraints>
+                                        <state key="normal" backgroundImage="Unchecked"/>
+                                        <state key="selected" backgroundImage="Checked"/>
+                                        <connections>
+                                            <action selector="actionButtonTapped:" destination="Uyr-We-9yl" eventType="touchUpInside" id="TJY-aA-sdr"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstItem="9wH-dH-dhb" firstAttribute="centerX" secondItem="UG9-8f-Rck" secondAttribute="centerX" id="JC4-74-OSP"/>
+                                    <constraint firstItem="9wH-dH-dhb" firstAttribute="centerY" secondItem="UG9-8f-Rck" secondAttribute="centerY" id="d72-LK-oJg"/>
+                                    <constraint firstItem="9wH-dH-dhb" firstAttribute="width" secondItem="UG9-8f-Rck" secondAttribute="width" id="vAm-me-R01"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="8EY-Op-jvl" firstAttribute="leading" secondItem="fOi-Y4-PFV" secondAttribute="trailing" id="3gd-fj-ikR"/>
+                            <constraint firstItem="fOi-Y4-PFV" firstAttribute="leading" secondItem="5T5-09-aUP" secondAttribute="leading" id="3i3-um-IEq"/>
+                            <constraint firstItem="fOi-Y4-PFV" firstAttribute="height" secondItem="5T5-09-aUP" secondAttribute="height" id="9FL-lx-dHj"/>
+                            <constraint firstItem="UG9-8f-Rck" firstAttribute="width" secondItem="5T5-09-aUP" secondAttribute="width" multiplier="1:12" id="hsV-wR-rVL"/>
+                            <constraint firstItem="UG9-8f-Rck" firstAttribute="height" secondItem="5T5-09-aUP" secondAttribute="height" id="z2M-XM-IU4"/>
+                        </constraints>
+                    </stackView>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="trailing" secondItem="5T5-09-aUP" secondAttribute="trailing" constant="20" id="aIj-CG-D5b"/>
+                    <constraint firstItem="5T5-09-aUP" firstAttribute="leading" secondItem="eCs-bQ-10A" secondAttribute="leading" id="ha4-fP-lHy"/>
+                    <constraint firstItem="5T5-09-aUP" firstAttribute="centerY" secondItem="eCs-bQ-10A" secondAttribute="centerY" id="kig-2y-AbP"/>
+                    <constraint firstItem="5T5-09-aUP" firstAttribute="height" secondItem="eCs-bQ-10A" secondAttribute="height" id="z6j-fc-jkQ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="Action" destination="9wH-dH-dhb" id="YZL-8G-veO"/>
+                <outlet property="IngredientDescription" destination="i6z-PE-cII" id="Jin-TV-jNd"/>
+                <outlet property="IngredientTag" destination="fOi-Y4-PFV" id="cGD-5S-QoO"/>
+            </connections>
+            <point key="canvasLocation" x="-33" y="-223"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="Checked" width="44" height="44"/>
+        <image name="Unchecked" width="44" height="44"/>
+    </resources>
+</document>
