@@ -69,6 +69,7 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .ingredients {
+            print(ingredients.count)
             return (ingredients.count + 1)
         } else if items[section].type == .instruction {
             return (instructions.count + 1)
@@ -116,14 +117,21 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
                 let buttonAddIngredient = cell.viewWithTag(4) as! UIButton
                 buttonAddIngredient.setTitle(String(indexPath.row), for: .normal)
                 buttonAddIngredient.titleLabel?.layer.opacity = 0.0
+//                if(indexPath.row != 0){
+//                    buttonAddIngredient.tag = indexPath.row
+//                }else{
+//                    buttonAddIngredient.tag = 0
+//                }
                 buttonAddIngredient.removeTarget(nil, action: nil, for: .allEvents)
                 buttonAddIngredient.addTarget(self, action: #selector(AddRecipeController.addIngredientAction(_:)), for: .touchUpInside)
                 let ingredient = cell.viewWithTag(5) as! UILabel
                 if indexPath.row < ingredients.count {
                     ingredient.text = ingredients[indexPath.row]
                 }else{
-                     ingredient.text = "Tap button to add ingredient"
+                    ingredient.text = "Tap button to add ingredient"
                 }
+                //print("index path row is\(indexPath.row), count array is \(ingredients.count)")
+            
                 return cell
             }
             
@@ -132,6 +140,7 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
                 let buttonAddInstruction = cell.viewWithTag(6) as! UIButton
                 buttonAddInstruction.setTitle(String(indexPath.row), for: .normal)
                 buttonAddInstruction.titleLabel?.layer.opacity = 0.0
+                //buttonAddInstruction.tag = 0
                 buttonAddInstruction.removeTarget(nil, action: nil, for: .allEvents)
                 buttonAddInstruction.addTarget(self, action: #selector(AddRecipeController.addInstructionAction(_:)), for: .touchUpInside)
                 let instruction = cell.viewWithTag(7) as! UILabel
@@ -140,6 +149,7 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
                 }else{
                     instruction.text = "Tap button to add instruction"
                 }
+              
                 return cell
             }
         }
@@ -154,12 +164,19 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField) {
         if textField.tag == 1 {
             name = textField.text ?? ""
+            if let text = textField.text, text.count > 0 {
+                if !(text.isAlphabetic || text.isAlphaNumeric) {
+                    MTAlert(title: "please enter a vaild name", message: "", preferredStyle: .alert)
+                        .addAction(title: "ok", style: .cancel) { (_) in
+                        }.show()
+                }
+            }
         } else if textField.tag == 2 {
             cuisine = textField.text ?? ""
         } else if textField.tag == 3 {
             if let timeString = textField.text {
                 let array = timeString.split(separator: " ")
-                if array[1] == "minutes" {
+                if array.count > 1, array[1] == "minutes" {
                     time = Int(array[0])
                 } else {
                     time = Int(array[0])! * 60
@@ -289,6 +306,13 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
             realmIngredients.append(ingredient)
         }
         
+        if(name=="" || time == 0 || cuisine == "" || ingredients.count==0 || instructions.count==0){
+            MTAlert(title: "please provide  all information", message: "", preferredStyle: .alert)
+                .addAction(title: "ok", style: .cancel) { (_) in
+                }.show()
+            return
+        }
+        
         let recipe = Recipe(name: name!, time: time!, cuisine: cuisine!, ingredients: realmIngredients, instruction: realmInstructions)
         try! realm.write {
             realm.add(recipe, update: true)
@@ -297,4 +321,44 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
     }
     
     
+}
+
+extension String {
+    
+    /// Check if string contains one or more letters.
+    ///
+    ///        "123abc".hasLetters -> true
+    ///        "123".hasLetters -> false
+    ///
+    public var hasLetters: Bool {
+        return rangeOfCharacter(from: .letters, options: .numeric, range: nil) != nil
+    }
+    
+    /// Check if string contains one or more numbers.
+    ///
+    ///        "abcd".hasNumbers -> false
+    ///        "123abc".hasNumbers -> true
+    ///
+    public var hasNumbers: Bool {
+        return rangeOfCharacter(from: .decimalDigits, options: .literal, range: nil) != nil
+    }
+    
+    /// Check if string contains only letters.
+    ///
+    ///        "abc".isAlphabetic -> true
+    ///        "123abc".isAlphabetic -> false
+    ///
+    public var isAlphabetic: Bool {
+        return  hasLetters && !hasNumbers
+    }
+    
+    /// Check if string contains at least one letter and one number.
+    ///
+    ///        // useful for passwords
+    ///        "123abc".isAlphaNumeric -> true
+    ///        "abc".isAlphaNumeric -> false
+    ///
+    public var isAlphaNumeric: Bool {
+        return components(separatedBy: CharacterSet.alphanumerics).joined(separator: "").count == 0 && hasLetters && hasNumbers
+    }
 }

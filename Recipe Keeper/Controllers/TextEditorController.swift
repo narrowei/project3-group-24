@@ -57,9 +57,17 @@ class TextEditorController: UIViewController,UITableViewDelegate,UITableViewData
         return string.rangeOfCharacter(from: invalidCharacters, options: [], range: string.startIndex ..< string.endIndex) == nil
     }
     
+
+    
     @IBAction func addItem(_ sender: Any) {
         if mode == .ingredient {
             if let text = step.text{
+                if(!text.hasLetters){
+                    MTAlert(title: "please enter a vaild ingredient", message: "", preferredStyle: .alert)
+                        .addAction(title: "ok", style: .cancel) { (_) in
+                        }.show()
+                    return
+                }
                 data.append(text)
                 DispatchQueue.main.async(execute: {
                     self.details.reloadData()
@@ -69,6 +77,12 @@ class TextEditorController: UIViewController,UITableViewDelegate,UITableViewData
             }
         }else{
             if let text = step.text{
+                if(!text.hasLetters){
+                    MTAlert(title: "please enter a vaild instruction", message: "", preferredStyle: .alert)
+                        .addAction(title: "ok", style: .cancel) { (_) in
+                        }.show()
+                    return
+                }
                 if let timer = time.text{
                     if(timer != ""){
                     data.append("\(text) (\(timer)mins)")
@@ -111,6 +125,7 @@ class TextEditorController: UIViewController,UITableViewDelegate,UITableViewData
                         }
                     }else{
                         previousVC.instructions.insert(contentsOf: data, at: position+1)
+
                     }
                 }
             }
@@ -142,3 +157,5 @@ class TextEditorController: UIViewController,UITableViewDelegate,UITableViewData
     */
 
 }
+
+
