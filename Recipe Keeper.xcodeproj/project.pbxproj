@@ -50,6 +50,8 @@
 		58F8F22720B3D70100208A05 /* AddIngredientCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F8F22620B3D70100208A05 /* AddIngredientCell.swift */; };
 		58F8F22920B3D71700208A05 /* AddInstructionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F8F22820B3D71700208A05 /* AddInstructionCell.swift */; };
 		58F8F22B20B3D72800208A05 /* AddInstructionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 58F8F22A20B3D72800208A05 /* AddInstructionCell.xib */; };
+		B650975320B6EA0700461584 /* AddStepsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B650975120B6EA0700461584 /* AddStepsCell.swift */; };
+		B650975420B6EA0700461584 /* AddStepsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B650975220B6EA0700461584 /* AddStepsCell.xib */; };
 		C8E7190EBBE67DC1080FA93C /* Pods_Reciper_Keeper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D69D19F79663D9EB127226B /* Pods_Reciper_Keeper.framework */; };
 /* End PBXBuildFile section */
 
@@ -119,6 +121,8 @@
 		58F8F22820B3D71700208A05 /* AddInstructionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddInstructionCell.swift; sourceTree = "<group>"; };
 		58F8F22A20B3D72800208A05 /* AddInstructionCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddInstructionCell.xib; sourceTree = "<group>"; };
 		85CD1FA19B750D58C83AF0F0 /* Pods_Reciper_KeeperUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Reciper_KeeperUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B650975120B6EA0700461584 /* AddStepsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddStepsCell.swift; sourceTree = "<group>"; };
+		B650975220B6EA0700461584 /* AddStepsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddStepsCell.xib; sourceTree = "<group>"; };
 		D41319351F5093001715316E /* Pods-Reciper KeeperTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reciper KeeperTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Reciper KeeperTests/Pods-Reciper KeeperTests.debug.xcconfig"; sourceTree = "<group>"; };
 		F415076C777EEC57014013CC /* Pods-Reciper KeeperTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Reciper KeeperTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Reciper KeeperTests/Pods-Reciper KeeperTests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -154,6 +158,7 @@
 		305D62C220B1953F0026A6E3 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				B650975120B6EA0700461584 /* AddStepsCell.swift */,
 				0140E6BF20B0717C00699CE3 /* TextEditorController.swift */,
 				5880F69520A3DB1800FA5395 /* RecipeListController.swift */,
 				5880F69920A4852B00FA5395 /* RecipeItemCell.swift */,
@@ -199,6 +204,7 @@
 				58F8F21C20B3D60900208A05 /* EstimateTimeCell.xib */,
 				58F8F21E20B3D65100208A05 /* AddIngredientCell.xib */,
 				58F8F22A20B3D72800208A05 /* AddInstructionCell.xib */,
+				B650975220B6EA0700461584 /* AddStepsCell.xib */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -291,7 +297,6 @@
 				5880F65F20A3D84F00FA5395 /* Frameworks */,
 				5880F66020A3D84F00FA5395 /* Resources */,
 				D560947319B5949A06903C74 /* [CP] Embed Pods Frameworks */,
-				20BA229403757D5C3E2E2F72 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -310,8 +315,6 @@
 				5880F67420A3D85000FA5395 /* Sources */,
 				5880F67520A3D85000FA5395 /* Frameworks */,
 				5880F67620A3D85000FA5395 /* Resources */,
-				18CDABD7BADD039CE503B34F /* [CP] Embed Pods Frameworks */,
-				15E854E5E77ECA3D1993BF25 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -331,8 +334,6 @@
 				5880F67F20A3D85000FA5395 /* Sources */,
 				5880F68020A3D85000FA5395 /* Frameworks */,
 				5880F68120A3D85000FA5395 /* Resources */,
-				132A54842C939C43B9C86429 /* [CP] Embed Pods Frameworks */,
-				233A0DD28A0B87BBAAFA482A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -408,6 +409,7 @@
 				0140E6B820B0682000699CE3 /* AddRecipeIngredientHeaderView.xib in Resources */,
 				5880F66F20A3D85000FA5395 /* Assets.xcassets in Resources */,
 				5880F66D20A3D84F00FA5395 /* Main.storyboard in Resources */,
+				B650975420B6EA0700461584 /* AddStepsCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -434,81 +436,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		132A54842C939C43B9C86429 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reciper KeeperUITests/Pods-Reciper KeeperUITests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		15E854E5E77ECA3D1993BF25 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reciper KeeperTests/Pods-Reciper KeeperTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		18CDABD7BADD039CE503B34F /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reciper KeeperTests/Pods-Reciper KeeperTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		20BA229403757D5C3E2E2F72 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reciper Keeper/Pods-Reciper Keeper-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		233A0DD28A0B87BBAAFA482A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-Reciper KeeperUITests/Pods-Reciper KeeperUITests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		5DA6E755E84EF13B7903EBB2 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -610,6 +537,7 @@
 				0140E6C420B0A63900699CE3 /* FilterController.swift in Sources */,
 				5880F69620A3DB1800FA5395 /* RecipeListController.swift in Sources */,
 				5811F0C620B282E900F50CA9 /* RecipeViewModel.swift in Sources */,
+				B650975320B6EA0700461584 /* AddStepsCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -783,11 +711,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ZK794X9FWS;
+				DEVELOPMENT_TEAM = 8GKMXA6U2D;
 				INFOPLIST_FILE = "$(SRCROOT)/Recipe Keeper/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Recipe-Keeper";
+				PRODUCT_BUNDLE_IDENTIFIER = "Recipe-Keeper-wei";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -800,11 +728,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = ZK794X9FWS;
+				DEVELOPMENT_TEAM = 8GKMXA6U2D;
 				INFOPLIST_FILE = "$(SRCROOT)/Recipe Keeper/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "Recipe-Keeper";
+				PRODUCT_BUNDLE_IDENTIFIER = "Recipe-Keeper-wei";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
