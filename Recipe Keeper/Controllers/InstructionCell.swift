@@ -10,53 +10,30 @@ import UIKit
 
 class InstructionCell: UITableViewCell {
     
-    @IBOutlet weak var StepTag: UIView!
+    @IBOutlet weak var StepTagColor: UIView!
     @IBOutlet weak var StepDescription: UILabel!
-    @IBOutlet weak var Action: UIButton!
-    @IBAction func actionButtonTapped(_ sender: Any) {
-        Action.isSelected = !Action.isSelected
-        //item?.status = Action.isSelected
-    }
+    @IBOutlet weak var Action: UILabel!
     
-    
-    var item: Step? {
-        didSet {
-            StepDescription.text = item?.stepDescription
-            //Action.isSelected = (item?.status)!
+    func updateInstruction (stepNumber: Int, detail step: String) {
+        if (stepNumber + 1) % 3 == 0 {
+            StepTagColor.backgroundColor = UIColor(red: 213.0/255.0, green: 96.0/255.0, blue: 98.0/255.0, alpha: 1.0)
+        } else if (stepNumber + 1) % 2 == 0 {
+            StepTagColor.backgroundColor = UIColor(red: 236.0/255.0, green: 195.0/255.0, blue: 11.0/255.0, alpha: 1.0)
+        } else {
+            StepTagColor.backgroundColor = UIColor(red: 243.0/255.0, green: 119.0/255.0, blue: 72.0/255.0, alpha: 1.0)
         }
-    }
-    
-    var stepNumber: Int? {
-        didSet {
-            if (stepNumber! + 1) % 3 == 0 {
-                StepTag.backgroundColor = UIColor.MyTheme.pink
-            } else if (stepNumber! + 1) % 3 == 1 {
-                StepTag.backgroundColor = UIColor.MyTheme.yellow
-            } else if (stepNumber! + 1) % 3 == 2 {
-                StepTag.backgroundColor = UIColor.MyTheme.orange
-            }
-        }
-    }
-    
-    static var nib:UINib {
-        return UINib(nibName: identifier, bundle: nil)
-    }
-    
-    static var identifier: String {
-        return String(describing: self)
+        StepDescription.text = step
     }
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
-    
+
     override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(false, animated: false)
-        
-        
-        
+        super.setSelected(selected, animated: animated)
+
         // Configure the view for the selected state
     }
-    
+
 }

@@ -11,23 +11,15 @@ import UIKit
 class RecipeItemCell: UITableViewCell {
 
     @IBOutlet weak var RecipeTitle: UILabel!
-    @IBOutlet weak var RecipeCuisine: UILabel!
     @IBOutlet weak var RecipeTime: UILabel!
+    @IBOutlet weak var RecipeCuisine: UILabel!
+    
+    
     
     func updateRecipeList (with recipe: Recipe) {
         RecipeTitle.text = recipe.name
+        RecipeTime.text = String(recipe.time) + " minutes"
         RecipeCuisine.text = recipe.cuisine
-        if recipe.time < 60 {
-            RecipeTime.text = "\(recipe.time) minutes"
-        } else if recipe.time == 60 {
-            RecipeTime.text = " 1 hour"
-        } else if recipe.time > 60 && recipe.time % 6 != 0{
-            let hour = Double(recipe.time / 60)
-            RecipeTime.text = "\(hour) hours"
-        } else if recipe.time > 60 && recipe.time % 6 == 0{
-            let hour = recipe.time / 60
-            RecipeTime.text = "\(hour) hours"
-        }
     }
     
     override func awakeFromNib() {

@@ -7,12 +7,9 @@
 //
 
 import UIKit
-
-enum TextEditorMode {
-    case ingredient
-    case instruction
+enum TextEditorMode{
+    case ingredient, instruction
 }
-
 class TextEditorController: UIViewController {
 
     @IBOutlet weak var textView: UITextView!
@@ -20,11 +17,7 @@ class TextEditorController: UIViewController {
     var mode:TextEditorMode!
     override func viewDidLoad() {
         super.viewDidLoad()
-        if mode == .ingredient {
-            self.navigationItem.title = "Add Ingredient"
-        } else if mode == .instruction {
-            self.navigationItem.title = "Step Instruction"
-        }
+
         // Do any additional setup after loading the view.
     }
 
@@ -36,12 +29,12 @@ class TextEditorController: UIViewController {
 
     
     @IBAction func saveAction(_ sender: Any) {
-        if let vcs = navigationController?.viewControllers {
-            if let previousVC = vcs[vcs.count - 2] as? AddRecipeController {
-                if mode == .ingredient {
-                    previousVC.ingredients.append(textView.text)
-                } else if mode == .instruction {
+        if let vcs = navigationController?.viewControllers{
+            if let previousVC = vcs[vcs.count - 2] as? AddRecipeController{
+                if mode == .instruction{
                     previousVC.instructions.append(textView.text)
+                }else if mode == .ingredient{
+                    previousVC.ingredients.append(textView.text)
                 }
             }
         }
@@ -49,7 +42,6 @@ class TextEditorController: UIViewController {
         navigationController?.popViewController(animated: true)
         
     }
- 
     /*
     // MARK: - Navigation
 

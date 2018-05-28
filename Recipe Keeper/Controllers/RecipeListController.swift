@@ -10,13 +10,23 @@ import UIKit
 import RealmSwift
 class RecipeListController: UITableViewController, UISearchResultsUpdating {
     
-
+//    let sampleName = "Spaghetti"
+//    let sampleTime = 120
+//    let sampleCuisine = Cuisine.Italian
+//    let sampleIngredient = "paster 1 pack, 6 tomatoes"
+    
     //values from filter
     var selectedCuisine:String?
     var selectedTime:Int?
-    var recipes: [Recipe] = []
     
     let searchController = UISearchController(searchResultsController: nil)
+    
+    
+    var recipes: [Recipe] = []
+    
+    
+    
+    
     @IBAction func unwindToRecipeList(_ unwindSegue: UIStoryboardSegue) {
     }
     
@@ -141,22 +151,12 @@ class RecipeListController: UITableViewController, UISearchResultsUpdating {
     
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let recipeViewController = storyboard?.instantiateViewController(withIdentifier: "RecipeController") as! RecipeController
-        recipeViewController.currentRecipe = recipes[indexPath.row]
-        print(recipes[indexPath.row])
-        navigationController?.pushViewController(recipeViewController, animated: true)
+        let vc = storyboard?.instantiateViewController(withIdentifier: "RecipeController") as! RecipeController
+        vc.currentRecipe = recipes[indexPath.row]
+        navigationController?.pushViewController(vc, animated: true)
     }
-    /*
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-        if segue.identifier == "ViewRecipe" {
-            let recipeViewController = segue.destination as! RecipeController
-            let selected = tableView.indexPathForSelectedRow?.row
-            recipeViewController.currentRecipe = recipes[selected!]
-        }
-    }
-    */
+
+    
   
     
     //filtering the recipe list
@@ -169,7 +169,7 @@ class RecipeListController: UITableViewController, UISearchResultsUpdating {
         }
         
         if selectedTime != nil{
-            vc.selectedTimeIndex = vc.timeMark.index(of: selectedTime!)
+            vc.selectedTimeIndex = vc.times.index(of: selectedTime!)
         }
         
         navigationController?.pushViewController(vc, animated: true)

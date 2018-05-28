@@ -2,7 +2,7 @@
 //  RecipeController.swift
 //  Reciper Keeper
 //
-//  Created by Alice Mai Tu on 10/5/18.
+//  Created by Roman Pavlov on 19/5/18.
 //  Copyright © 2018 Alice Mai Tu. All rights reserved.
 //
 
@@ -10,86 +10,85 @@ import UIKit
 
 class RecipeController: UITableViewController {
     var currentRecipe: Recipe!
-    var items = [RecipeViewModelItem]()
+    var steps: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Generate view model
-        let recipeViewModel = RecipeViewModel(recipe: currentRecipe)
-        items = recipeViewModel.items
-        
-        // Specify title and row height
         self.navigationItem.title = currentRecipe.name
-        
+        let sampleSteps = ["Cook paster", "Chop tomatoes and onions", "Season minced beef"]
+        steps = sampleSteps
+        //tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.sectionHeaderHeight = 40
-        tableView?.register(IngredientCell.nib, forCellReuseIdentifier: IngredientCell.identifier)
-        tableView?.register(InstructionCell.nib, forCellReuseIdentifier: InstructionCell.identifier)
-        
+
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
-        
+
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     // MARK: - Table view data source
-    
-    
+
+    //setting number of sections
     override func numberOfSections(in tableView: UITableView) -> Int {
-        print(items.count)
-        return items.count
-        
+        return 2
     }
     
-    
+    //setting number of rows for intgridients/instructions
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(items[section].rowCount)
-        return items[section].rowCount
-        
+        // #warning Incomplete implementation, return the number of rows
+        if section == 0 {
+            return currentRecipe.ingredients.count
+        } else {
+            return currentRecipe.instructions.count
+        }
     }
-    
+
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
         
-        // Generate view for each section
-        let item = items[indexPath.section]
-        switch item.type {
+        if indexPath.section == 0{
             
-        // Generate view for Ingredient section
-        case .ingredients:
+            let cell = tableView.dequeueReusableCell(withIdentifier:
+                "SimpleCell", for: indexPath)
+            let label = cell.contentView.viewWithTag(1) as! UILabel
+            label.text = currentRecipe.ingredients[indexPath.row]
+            return cell
+        }else{
             
-            if let item = item as? RecipeIngredientView, let cell = tableView.dequeueReusableCell(withIdentifier: IngredientCell.identifier, for: indexPath) as? IngredientCell {
-                let ingredient = item.ingredients[indexPath.row]
-                cell.item = ingredient
-                cell.stepNumber = indexPath.row
-                print(ingredient)
-                return cell
-            }
-            
-        // Generate view for Instruction section
-        case .instruction:
-            
-            if let item = item as? RecipeInstructionView, let cell = tableView.dequeueReusableCell(withIdentifier: InstructionCell.identifier, for: indexPath) as? InstructionCell {
-                let step = item.steps[indexPath.row]
-                cell.item = step
-                cell.stepNumber = indexPath.row
-                return cell
-            }
+            let cell = tableView.dequeueReusableCell(withIdentifier:
+                "InstructionItem", for: indexPath) as! InstructionCell
+       
+            let instruction = currentRecipe.instructions[indexPath.row]
+            cell.updateInstruction(stepNumber: indexPath.row, detail: instruction.text)
+            cell.showsReorderControl = false
+            return cell
         }
-        
-        return cell
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return items[section].sectionTitle
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = Bundle.main.loadNibNamed("GrayHeaderView", owner: self, options: nil)!.first as! UIView
+        
+        let label = header.viewWithTag(1) as! UILabel
+        if section == 0{
+            label.text = "INGREDIENTS"
+        }else{
+            label.text = "INSTRUCTIONS"
+        }
+        return header
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 56
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.02
     }
     
     /*
@@ -114,29 +113,27 @@ class RecipeController: UITableViewController {
     
     /*
      // Override to support rearranging the table view.
-     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-     
-     }
-     */
-    
+    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+
+    }
+    */
+
     /*
-     // Override to support conditional rearranging of the table view.
-     override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-     // Return false if you do not want the item to be re-orderable.
-     return true
-     }
-     */
-    
-    
+    // Override to support conditional rearranging of the table view.
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        // Return false if you do not want the item to be re-orderable.
+        return true
+    }
+    */
+
+    /*
     // MARK: - Navigation
-    
+
     // In a storyboard-based application, you will often want to do a little preparation before navigation
-    /*
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destinationViewController.
         // Pass the selected object to the new view controller.
     }
- */
-    
-    
+    */
+
 }
