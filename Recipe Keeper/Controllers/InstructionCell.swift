@@ -80,6 +80,7 @@ class InstructionCell: UITableViewCell,UNUserNotificationCenterDelegate {
             }
             alertController.addAction(okAction)
             parentViewController?.present(alertController, animated: true, completion: nil)
+            MTSystemSound.playSystemSound(audioID: .alarm)
           
         }
     }
@@ -89,14 +90,14 @@ class InstructionCell: UITableViewCell,UNUserNotificationCenterDelegate {
     @IBAction func startTimer(_ sender: Any) {
         print(timer.tag)
         timer.setImage(nil, for: [])
-        remainingSeconds = timer.tag
+        remainingSeconds = timer.tag * 60
         isCounting = !isCounting
         timer.setTitleColor(UIColor.blue, for: [])
         let content = UNMutableNotificationContent()
         content.title = "Timer"
         content.body = "count down over!"
         content.sound = UNNotificationSound(named: "alarm.mp3")
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(timer.tag),
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Double(timer.tag * 60),
                                                         repeats: false)
         let identifier = "RecipeLocalNotification"
         let request = UNNotificationRequest(identifier: identifier,
