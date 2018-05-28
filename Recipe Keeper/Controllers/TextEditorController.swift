@@ -13,21 +13,79 @@ enum TextEditorMode {
     case instruction
 }
 
-class TextEditorController: UIViewController {
 
-    @IBOutlet weak var textView: UITextView!
+
+class TextEditorController: UIViewController,UITableViewDelegate,UITableViewDataSource,UITextFieldDelegate {
+
+    
+
+    @IBOutlet weak var details: UITableView!
+    @IBOutlet weak var label: UILabel!
+    
+    @IBOutlet weak var time: UITextField!
+    @IBOutlet weak var step: UITextField!
+    @IBOutlet weak var timerlabel: UILabel!
     
     var mode:TextEditorMode!
+    var position = 0
+    var data = [String]()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        details.dataSource = self
+        details.delegate = self
+        time.delegate = self
+        time.keyboardType = .numberPad
+        print(position)
         if mode == .ingredient {
+            
             self.navigationItem.title = "Add Ingredient"
+            self.label.text = "Ingredient"
+            self.time.isHidden = true
+            self.timerlabel.isHidden = true
         } else if mode == .instruction {
+            
             self.navigationItem.title = "Step Instruction"
+            self.label.text = "Instruction"
         }
         // Do any additional setup after loading the view.
     }
 
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let invalidCharacters = CharacterSet(charactersIn: "0123456789").inverted
+        return string.rangeOfCharacter(from: invalidCharacters, options: [], range: string.startIndex ..< string.endIndex) == nil
+    }
+    
+    @IBAction func addItem(_ sender: Any) {
+        if mode == .ingredient {
+            if let text = step.text{
+                data.append(text)
+                DispatchQueue.main.async(execute: {
+                    self.details.reloadData()
+                })
+                step.text = ""
+                step.resignFirstResponder()
+            }
+        }else{
+            if let text = step.text{
+                if let timer = time.text{
+                    if(timer != ""){
+                    data.append("\(text) (\(timer)mins)")
+                    }else{
+                        data.append(text)
+                    }
+                    DispatchQueue.main.async(execute: {
+                        self.details.reloadData()
+                    })
+                }
+                step.text = ""
+                time.text = ""
+                step.resignFirstResponder()
+            }
+        }
+        
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -39,15 +97,38 @@ class TextEditorController: UIViewController {
         if let vcs = navigationController?.viewControllers {
             if let previousVC = vcs[vcs.count - 2] as? AddRecipeController {
                 if mode == .ingredient {
-                    previousVC.ingredients.append(textView.text)
+                    if (position == -1){
+                        for ingredient in data{
+                            previousVC.ingredients.append(ingredient)
+                        }
+                    }else{
+                        previousVC.ingredients.insert(contentsOf: data, at: position+1)
+                    }
                 } else if mode == .instruction {
-                    previousVC.instructions.append(textView.text)
+                    if (position == -1){
+                        for instruction in data{
+                            previousVC.instructions.append(instruction)
+                        }
+                    }else{
+                        previousVC.instructions.insert(contentsOf: data, at: position+1)
+                    }
                 }
             }
         }
         
         navigationController?.popViewController(animated: true)
         
+    }
+    
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return data.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        cell.textLabel?.text = data[indexPath.row]
+        return cell
     }
  
     /*

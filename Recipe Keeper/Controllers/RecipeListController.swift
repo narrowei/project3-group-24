@@ -124,7 +124,6 @@ class RecipeListController: UITableViewController, UISearchResultsUpdating {
         }
     }
 
-    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier:
             "RecipeItem", for: indexPath) as! RecipeItemCell
@@ -133,6 +132,17 @@ class RecipeListController: UITableViewController, UISearchResultsUpdating {
         cell.showsReorderControl = false
         
         return cell
+    }
+    
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete{
+            let realm = try! Realm()
+            try! realm.write {
+                realm.delete(recipes[indexPath.row])
+            }
+            self.recipes.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {

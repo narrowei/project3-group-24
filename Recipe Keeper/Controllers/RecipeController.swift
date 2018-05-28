@@ -12,6 +12,10 @@ class RecipeController: UITableViewController {
     var currentRecipe: Recipe!
     var items = [RecipeViewModelItem]()
     
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -79,6 +83,7 @@ class RecipeController: UITableViewController {
             
             if let item = item as? RecipeInstructionView, let cell = tableView.dequeueReusableCell(withIdentifier: InstructionCell.identifier, for: indexPath) as? InstructionCell {
                 let step = item.steps[indexPath.row]
+                cell.time = item.steps[indexPath.row].timer
                 cell.item = step
                 cell.stepNumber = indexPath.row
                 return cell
@@ -92,6 +97,21 @@ class RecipeController: UITableViewController {
         return items[section].sectionTitle
     }
     
+    @IBAction func editRecipe(_ sender: UIButton) {
+        let addRecipe = storyboard?.instantiateViewController(withIdentifier: "AddRecipeController") as! AddRecipeController
+        addRecipe.currentRecipe = currentRecipe
+        addRecipe.name = currentRecipe.name
+        addRecipe.cuisine = currentRecipe.cuisine
+        addRecipe.time = currentRecipe.time
+        for ingredient in currentRecipe.ingredients!{
+            addRecipe.ingredients.append(ingredient)
+        }
+        for step in currentRecipe.instruction!{
+            addRecipe.instructions.append("\(step.stepDescription)")
+        }
+    
+        navigationController?.pushViewController(addRecipe, animated: true)
+    }
     /*
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {

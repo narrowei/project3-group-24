@@ -69,7 +69,6 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if items[section].type == .ingredients {
-            print(ingredients.count)
             return (ingredients.count + 1)
         } else if items[section].type == .instruction {
             return (instructions.count + 1)
@@ -115,24 +114,31 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
         case .ingredients:
             if let cell = tableView.dequeueReusableCell(withIdentifier: AddIngredientCell.identifier, for: indexPath) as? AddIngredientCell {
                 let buttonAddIngredient = cell.viewWithTag(4) as! UIButton
+                buttonAddIngredient.setTitle(String(indexPath.row), for: .normal)
+                buttonAddIngredient.titleLabel?.layer.opacity = 0.0
                 buttonAddIngredient.removeTarget(nil, action: nil, for: .allEvents)
-                buttonAddIngredient.addTarget(self, action: #selector(AddRecipeController.addIngredientAction), for: .touchUpInside)
+                buttonAddIngredient.addTarget(self, action: #selector(AddRecipeController.addIngredientAction(_:)), for: .touchUpInside)
                 let ingredient = cell.viewWithTag(5) as! UILabel
                 if indexPath.row < ingredients.count {
                     ingredient.text = ingredients[indexPath.row]
+                }else{
+                     ingredient.text = "Tap button to add ingredient"
                 }
-                //print("index path row is\(indexPath.row), count array is \(ingredients.count)")
                 return cell
             }
             
         case .instruction:
             if let cell = tableView.dequeueReusableCell(withIdentifier: AddInstructionCell.identifier, for: indexPath) as? AddInstructionCell {
                 let buttonAddInstruction = cell.viewWithTag(6) as! UIButton
+                buttonAddInstruction.setTitle(String(indexPath.row), for: .normal)
+                buttonAddInstruction.titleLabel?.layer.opacity = 0.0
                 buttonAddInstruction.removeTarget(nil, action: nil, for: .allEvents)
-                buttonAddInstruction.addTarget(self, action: #selector(AddRecipeController.addInstructionAction), for: .touchUpInside)
+                buttonAddInstruction.addTarget(self, action: #selector(AddRecipeController.addInstructionAction(_:)), for: .touchUpInside)
                 let instruction = cell.viewWithTag(7) as! UILabel
                 if indexPath.row < instructions.count {
                     instruction.text = instructions[indexPath.row]
+                }else{
+                    instruction.text = "Tap button to add instruction"
                 }
                 return cell
             }
@@ -164,25 +170,42 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
         }
     }
     
-    /*
+    
      // Override to support conditional editing of the table view.
      override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
      // Return false if you do not want the specified item to be editable.
-     return true
+       
+         if(indexPath.section == 3 || indexPath.section == 4){
+            if(indexPath.row + 1 == tableView.numberOfRows(inSection: indexPath.section)){
+                return false
+            }
+         }else if(indexPath.row == 0){
+            return false
+         }
+         return true
      }
-     */
+ 
     
-    /*
+    
      // Override to support editing the table view.
      override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
      if editingStyle == .delete {
+        if(indexPath.section == 3){
+            ingredients.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }else if(indexPath.section == 4){
+            instructions.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            tableView.reloadData()
+        }
      // Delete the row from the data source
-     tableView.deleteRows(at: [indexPath], with: .fade)
+     //tableView.deleteRows(at: [indexPath], with: .fade)
      } else if editingStyle == .insert {
      // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
      }
      }
-     */
+    
     
     /*
      // Override to support rearranging the table view.
@@ -209,17 +232,27 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
      
     }
  */
-    @objc func addIngredientAction(){
+    @objc func addIngredientAction(_ sender:UIButton){
         let textEditor = storyboard?.instantiateViewController(withIdentifier: "TextEditorController") as! TextEditorController
         textEditor.mode = .ingredient
+        if(Int(sender.currentTitle!)! + 1 == tableView.numberOfRows(inSection: 3)){
+             textEditor.position = -1
+        }else{
+            textEditor.position = Int(sender.currentTitle!)!
+        }
         navigationController?.pushViewController(textEditor, animated: true)
         
     }
     //actions when add instruction button is tapped
     
-    @objc func addInstructionAction(){
+    @objc func addInstructionAction(_ sender:UIButton){
         let textEditor = storyboard?.instantiateViewController(withIdentifier: "TextEditorController") as! TextEditorController
         textEditor.mode = .instruction
+        if(Int(sender.currentTitle!)! + 1 == tableView.numberOfRows(inSection: 4)){
+            textEditor.position = -1
+        }else{
+            textEditor.position = Int(sender.currentTitle!)!
+        }
         navigationController?.pushViewController(textEditor, animated: true)
     }
     
@@ -230,8 +263,24 @@ class AddRecipeController: UITableViewController, UITextFieldDelegate {
         let realmInstructions = List<Step>()
         var i = 1
         for instruction in instructions{
-            let realmInstruction = Step(description: instruction, needTimer: false, timer:0)
-            realmInstructions.append(realmInstruction)
+            var time = ""
+            let pattern = "\\d*(?=mins)"
+            let regular = try! NSRegularExpression(pattern: pattern, options:.caseInsensitive)
+            let results = regular.matches(in: instruction, options: .reportProgress , range: NSMakeRange(0, instruction.characters.count))
+            for result in results {
+                let timer = (instruction as NSString).substring(with: result.range)
+                if(timer != ""){
+                    time = timer
+                }
+            }
+            if(time != ""){
+                let realmInstruction = Step(description: instruction, needTimer: true, timer:Int(time)!)
+                realmInstructions.append(realmInstruction)
+            }else{
+                let realmInstruction = Step(description: instruction, needTimer: false, timer:0)
+                realmInstructions.append(realmInstruction)
+            }
+            
             i += 1
         }
         
